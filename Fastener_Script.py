@@ -1,28 +1,45 @@
 import csv
+import os
 
-#Open csv Files
 
-rtdc_map = {}
+def build_rtdc_map():
+	rtdc_map = {}
+	#Open csv Files
+	with open('Fasteners-By_TDC.csv') as csvfile:
+		readCSV = csv.reader(csvfile, delimiter = ',')
 
-with open('Fasteners-By_TDC.csv') as csvfile:
-	readCSV = csv.reader(csvfile, delimiter = ',')
+		header = next(readCSV)
+		index_by_cname = { key: index for index, key in enumerate(header) }
 
-	header = next(readCSV)
-	index_by_cname = { key: index for index, key in enumerate(header) }
-
-#Reads Data in csv
-	for row in readCSV:
-		tdc = row[index_by_cname["TDC"]]
-		rtdc = row[index_by_cname["RTDC"]]
+	#Reads Data in csv
+		for row in readCSV:
+			tdc = row[index_by_cname["TDC"]]
+			rtdc = row[index_by_cname["RTDC"]]
 
 	#Omits Blank TDC's
-		if "" == tdc:
-			continue
+			if "" == tdc:
+				continue
 
-#Prints TDC & UTDC
-		print(tdc, rtdc)
+			if "" != rtdc:
+				rtdc_map[rtdc] = tdc
+
+	return rtdc_map
 
 
-		rtdc_map[rtdc] = tdc
+def rename_rtdc_files(path_to_root, rtdc_map):
+	for rtdc in rtdc_map:
+		old_name = os.path.join(path_to_root, rtdc)
+		if os.path.exists(old_name):
+			tdc = rtdc_map[rtdc]
+			new_name = os.path.join(path_to_root, tdc)
+			print(f'rename {old_name} -> {new_name}')
+			os.rename(old_name, new_name)
 
-print(rtdc_map)
+
+def main():
+	rtdc_map = build_rtdc_map()
+	rename_rtdc_files("./test_data", rtdc_map)
+
+
+if __name__ == "__main__":
+	main()
