@@ -36,14 +36,15 @@ def rename_rtdc_files(path_to_root, rtdc_map, dups_folder):
 			tdc = rtdc_map[rtdc]
 			new_name = os.path.join(path_to_root, tdc)
 
+			if os.path.exists(new_name):
+				print(f'{tdc} Already exists! Moving to dups folder.')
+				new_name = os.path.join(dups_folder, tdc)
 
 			try:
 				os.rename(old_name, new_name)
 				print(f'rename {old_name} -> {new_name}')
 			except OSError:
-				print(f'{tdc} Already exists! Moving to dups folder.')
-				new_name = os.path.join(dups_folder, tdc)
-				os.rename(old_name, new_name)
+				print(f"ERROR: {rtdc} rename failed, skipping.")
 
 def main(path_to_csv, path_to_fastener_photos, dups_folder):
 	if not os.path.exists(dups_folder): 
