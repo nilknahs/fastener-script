@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
 import csv
 import os
-
+import argparse
+import sys
 
 def build_rtdc_map(path_to_csv):
 	rtdc_map = {}
+	
 	#Open csv Files
 	with open(path_to_csv) as csvfile:
 		readCSV = csv.reader(csvfile, delimiter = ',')
@@ -36,10 +39,26 @@ def rename_rtdc_files(path_to_root, rtdc_map):
 			os.rename(old_name, new_name)
 
 
-def main():
-	rtdc_map = build_rtdc_map("Fasteners-By_TDC.csv")
-	rename_rtdc_files("./test_data", rtdc_map)
-
+def main(path_to_csv, path_to_fastener_photos):
+	rtdc_map = build_rtdc_map(path_to_csv)
+	rename_rtdc_files(path_to_fastener_photos, rtdc_map)
 
 if __name__ == "__main__":
-	main()
+	# Create the parser
+	my_parser = argparse.ArgumentParser(description='Input .csv location')
+
+	# Add the arguments
+	my_parser.add_argument('csv_path',
+	                       metavar='[PATH TO CSV]',
+	                       type=str,
+	                       help='the path to list')
+	my_parser.add_argument('tdc_folder',
+	                       metavar='[TDC FOLDER]',
+	                       type=str,
+	                       help='the path to list')
+
+	# Execute the parse_args() method
+	args = my_parser.parse_args()
+
+
+	main(args.csv_path, args.tdc_folder)
