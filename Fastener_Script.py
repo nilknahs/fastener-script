@@ -29,23 +29,27 @@ def build_rtdc_map(path_to_csv):
 	return rtdc_map
 
 
-def rename_rtdc_files(path_to_root, rtdc_map):
+def rename_rtdc_files(path_to_root, rtdc_map, dups_folder):
 	for rtdc in rtdc_map:
 		old_name = os.path.join(path_to_root, rtdc)
 		if os.path.exists(old_name):
 			tdc = rtdc_map[rtdc]
 			new_name = os.path.join(path_to_root, tdc)
-			print(f'rename {old_name} -> {new_name}')
+
 
 			try:
 				os.rename(old_name, new_name)
+				print(f'rename {old_name} -> {new_name}')
 			except OSError:
-				print(f'{tdc} already exists! skipping.')
+				print(f'{tdc} Already exists! Moving to dups folder.')
+				new_name = os.path.join(dups_folder, tdc)
+				os.rename(old_name, new_name)
 
-
-def main(path_to_csv, path_to_fastener_photos):
+def main(path_to_csv, path_to_fastener_photos, dups_folder):
+	if not os.path.exists(dups_folder): 
+		os.mkdir(dups_folder)
 	rtdc_map = build_rtdc_map(path_to_csv)
-	rename_rtdc_files(path_to_fastener_photos, rtdc_map)
+	rename_rtdc_files(path_to_fastener_photos, rtdc_map, dups_folder)
 
 if __name__ == "__main__":
 	# Create the parser
@@ -60,9 +64,13 @@ if __name__ == "__main__":
 	                       metavar='[TDC FOLDER]',
 	                       type=str,
 	                       help='the path to list')
+	my_parser.add_argument('dups_folder',
+	                       metavar='[DUPS FOLDER]',
+	                       type=str,
+	                       help='the path to list')
 
 	# Execute the parse_args() method
 	args = my_parser.parse_args()
 
 
-	main(args.csv_path, args.tdc_folder)
+	main(args.csv_path, args.tdc_folder, args.dups_folder)
