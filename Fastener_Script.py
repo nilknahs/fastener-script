@@ -2,10 +2,10 @@ import csv
 import os
 
 
-def build_rtdc_map():
+def build_rtdc_map(path_to_csv):
 	rtdc_map = {}
 	#Open csv Files
-	with open('Fasteners-By_TDC.csv') as csvfile:
+	with open(path_to_csv) as csvfile:
 		readCSV = csv.reader(csvfile, delimiter = ',')
 
 		header = next(readCSV)
@@ -37,7 +37,7 @@ def rename_rtdc_files(path_to_root, rtdc_map):
 
 
 def main():
-	rtdc_map = build_rtdc_map()
+	rtdc_map = build_rtdc_map("Fasteners-By_TDC.csv")
 	rename_rtdc_files("./test_data", rtdc_map)
 
 
