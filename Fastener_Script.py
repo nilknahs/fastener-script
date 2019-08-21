@@ -38,7 +38,12 @@ def rename_rtdc_files(path_to_root, rtdc_map, dups_folder):
 
 			if os.path.exists(new_name):
 				print(f'{tdc} Already exists! Moving to dups folder.')
-				new_name = os.path.join(dups_folder, tdc)
+				suffix = ""
+				for i in range(1, 5):
+					new_name = os.path.join(dups_folder, tdc + suffix)
+					if not os.path.exists(new_name):
+						break
+					suffix = f"-{i}"
 
 			try:
 				os.rename(old_name, new_name)
