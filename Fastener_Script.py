@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import csv
 import os
-import argparse
 import sys
+import click
 
 def build_rtdc_map(path_to_csv):
 	rtdc_map = {}
@@ -30,6 +30,7 @@ def build_rtdc_map(path_to_csv):
 
 
 def rename_rtdc_files(path_to_root, rtdc_map, dups_folder):
+
 	for rtdc in rtdc_map:
 		old_name = os.path.join(path_to_root, rtdc)
 		if os.path.exists(old_name):
@@ -51,6 +52,11 @@ def rename_rtdc_files(path_to_root, rtdc_map, dups_folder):
 			except OSError:
 				print(f"ERROR: {rtdc} rename failed, skipping.")
 
+
+@click.command()
+@click.argument('path_to_csv')
+@click.argument('path_to_fastener_photos')
+@click.argument('dups_folder')
 def main(path_to_csv, path_to_fastener_photos, dups_folder):
 	if not os.path.exists(dups_folder): 
 		os.mkdir(dups_folder)
@@ -58,25 +64,4 @@ def main(path_to_csv, path_to_fastener_photos, dups_folder):
 	rename_rtdc_files(path_to_fastener_photos, rtdc_map, dups_folder)
 
 if __name__ == "__main__":
-	# Create the parser
-	my_parser = argparse.ArgumentParser(description='Input .csv location')
-
-	# Add the arguments
-	my_parser.add_argument('csv_path',
-	                       metavar='[PATH TO CSV]',
-	                       type=str,
-	                       help='the path to list')
-	my_parser.add_argument('tdc_folder',
-	                       metavar='[TDC FOLDER]',
-	                       type=str,
-	                       help='the path to list')
-	my_parser.add_argument('dups_folder',
-	                       metavar='[DUPS FOLDER]',
-	                       type=str,
-	                       help='the path to list')
-
-	# Execute the parse_args() method
-	args = my_parser.parse_args()
-
-
-	main(args.csv_path, args.tdc_folder, args.dups_folder)
+	main()
