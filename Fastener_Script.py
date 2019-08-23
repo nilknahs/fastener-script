@@ -54,10 +54,14 @@ def rename_rtdc_files(path_to_root, rtdc_map, dups_folder):
 
 
 @click.command()
-@click.argument('path_to_csv')
-@click.argument('path_to_fastener_photos')
-@click.argument('dups_folder')
+@click.option('--dups_folder', '-df')
+@click.option('--path_to_fastener_photos', '-pfp')
+@click.option('--path_to_csv', '-pcsv')
 def main(path_to_csv, path_to_fastener_photos, dups_folder):
+	"""
+	This script renames "RTDCs" to "TDCs" of fastener photo data. First, 
+	locate your fastener photo data folder.
+	"""
 	if not os.path.exists(dups_folder): 
 		os.mkdir(dups_folder)
 	rtdc_map = build_rtdc_map(path_to_csv)
