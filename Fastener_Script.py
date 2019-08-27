@@ -89,7 +89,7 @@ def main(path_to_csv, path_to_fastener_photos, dups_folder):
 		exit()
 	
 	if not path_to_fastener_photos:
-		path_to_fastener_photos = select_fastener_photos()
+		return
 	if not os.path.exists(path_to_fastener_photos):
 		print (f'Hey. I can\'t seem to find a file called "{path_to_fastener_photos}"')
 		exit()
